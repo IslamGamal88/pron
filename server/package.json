@@ -1,17 +1,16 @@
 {
-  "name": "pron",
+  "name": "pronserver",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "concurrently \"cd client && bun run dev\" \"cd server && bun run start\""
+    "start": "bun --hot main.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@google/generative-ai": "^0.13.0",
-    "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
