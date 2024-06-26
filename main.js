@@ -36,6 +36,10 @@ const name = "default";
 //   });
 // });
 
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
 io.on("connection", (sock) => {
   console.log("Client connected");
 
