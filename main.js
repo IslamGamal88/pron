@@ -2,42 +2,37 @@ const http = require("http");
 const path = require("path");
 const express = require("express");
 const socketio = require("socket.io");
-// const parseArgs = require("minimist");
-// const fs = require("fs");
+const parseArgs = require("minimist");
+const fs = require("fs");
 
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
-const port = 8080;
-const name = "default";
-// const args = parseArgs(process.argv.slice(2));
-// const { name = "default", port = "8080" } = args;
 
-// app.use(express.static(path.join(__dirname, 'public')));
+const args = parseArgs(process.argv.slice(2));
+const { name = "default", port = "8080" } = args;
 
-// app.get("/api/test", (req, res) => {
-//   res.json({
-//     headers: req.headers,
-//     address: req.connection.remoteAddress,
-//   });
-// });
+app.use(express.static(path.join(__dirname, "public")));
 
-// app.get("/api/name", (req, res) => {
-//   res.json({ name });
-// });
+app.get("/api/test", (req, res) => {
+  res.json({
+    headers: req.headers,
+    address: req.connection.remoteAddress,
+  });
+});
 
-// app.get("/api/info", (req, res) => {
-//   fs.readFile(`${__dirname}/version.txt`, "utf8", (err, version) => {
-//     res.json({
-//       version: version || 0,
-//       dirname: __dirname,
-//       cwd: process.cwd(),
-//     });
-//   });
-// });
+app.get("/api/name", (req, res) => {
+  res.json({ name });
+});
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+app.get("/api/info", (req, res) => {
+  fs.readFile(`${__dirname}/version.txt`, "utf8", (err, version) => {
+    res.json({
+      version: version || 0,
+      dirname: __dirname,
+      cwd: process.cwd(),
+    });
+  });
 });
 
 io.on("connection", (sock) => {
