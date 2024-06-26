@@ -9,6 +9,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 const port = 8080;
+const name = "default";
 // const args = parseArgs(process.argv.slice(2));
 // const { name = "default", port = "8080" } = args;
 
