@@ -8,7 +8,11 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const app = express();
 require("dotenv").config();
 const server = http.createServer(app);
-const io = socketio(server);
+const io = socketio(server, {
+  cors: {
+    origin: "*",
+  },
+});
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
@@ -90,7 +94,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  sock.on("disconnect", () => {
+  socket.on("disconnect", () => {
     console.log("Socket Disconnected");
   });
 });

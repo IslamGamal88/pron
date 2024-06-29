@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 
-const socket = io();
+const socket = io("http://localhost:8080");
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
@@ -41,10 +41,9 @@ const Chat = () => {
   };
 
   return (
-    <div className="bg-red-100 h-screen">
+    <div className="bg-red-100 h-screen pt-20">
       <div className="container w-3/4 m-auto">
-        <a href="/">Home</a>
-        <div className="my-4">
+        <div className="">
           {messages.map((msg, index) => (
             <div key={index} className={msg.from}>
               {msg.text}
