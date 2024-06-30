@@ -19,7 +19,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 const args = parseArgs(process.argv.slice(2));
 const { name = "default", port = "8080" } = args;
 
-// app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public")));
 
 const questions = [
   "ما هو سنك ؟",
@@ -62,6 +62,11 @@ app.get("/api/info", (req, res) => {
       cwd: process.cwd(),
     });
   });
+});
+
+// Catch-all route to serve the main HTML file for other non-API requests
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 io.on("connection", (socket) => {
