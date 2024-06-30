@@ -93,9 +93,14 @@ io.on("connection", (socket) => {
         ", "
       )} what do you think the diagnosis is ? and can you recommend some general purpose exercises ?`;
 
-      getChatGPTResponse(prompt).then((response) => {
-        socket.emit("response", response);
-      });
+      getChatGPTResponse(prompt)
+        .then((response) => {
+          socket.emit("response", response);
+        })
+        .catch((err) => {
+          console.error(err);
+          socket.emit("response", "I'm sorry, I can't answer that.");
+        });
     }
   });
 
