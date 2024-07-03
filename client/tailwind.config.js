@@ -2,7 +2,14 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        whatsapp: "url('src/assets/whatsapp.jpeg')",
+      },
+      fontFamily: {
+        raleway: ["Raleway", "sans-serif"],
+      },
+    },
   },
   plugins: [],
 };

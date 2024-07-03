@@ -6,4 +6,7 @@ import Img5 from "./5.jpeg";
 import Img6 from "./6.jpeg";
 import Img7 from "./7.jpeg";
 import Img8 from "./8.jpeg";
-export { Img1, Img2, Img3, Img4, Img5, Img6, Img7, Img8 };
+import Pron from "./pron.jpeg";
+import Bot from "./bot.jpeg";
+
+export { Img1, Img2, Img3, Img4, Img5, Img6, Img7, Img8, Pron, Bot };

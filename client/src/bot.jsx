@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
+import Bot from "./assets/bot.jpeg";
 
 const url =
   process.env.NODE_ENV === "production"
@@ -9,83 +10,140 @@ const url =
 const socket = io(url);
 
 const Chat = () => {
-  const [messages, setMessages] = useState(() => {
-    const storedMessages = localStorage.getItem("chatMessages");
-    return storedMessages ? JSON.parse(storedMessages) : [];
-  });
+  const [messages, setMessages] = useState(
+    JSON.parse(localStorage.getItem("chatMessages")) || []
+  );
   const [input, setInput] = useState("");
-  const [isLoading, setLoading] = useState(false);
-
-  socket.on("connect", () => {
-    console.log("connected");
-  });
+  // const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    socket.on("question", (question) => {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: question, from: "bot" },
-      ]);
+    const handleInitialQuestion = (question) => {
+      const newMessage = { text: question, from: "bot" };
+      setMessages((prevMessages) => {
+        const updatedMessages = [...prevMessages, newMessage];
+        localStorage.setItem(
+          "chatMessages",
+          JSON.stringify(updatedMessages)
+        );
+        return updatedMessages;
+      });
+    };
+
+    const handleQuestion = (question) => {
+      const newMessage = { text: question, from: "bot" };
+      setMessages((prevMessages) => {
+        const updatedMessages = [...prevMessages, newMessage];
+        localStorage.setItem(
+          "chatMessages",
+          JSON.stringify(updatedMessages)
+        );
+        return updatedMessages;
+      });
+    };
+
+    const handleResponse = (response) => {
+      // setLoading(false);
+      const newMessage = { text: response, from: "bot" };
+      setMessages((prevMessages) => {
+        const updatedMessages = [...prevMessages, newMessage];
+        localStorage.setItem(
+          "chatMessages",
+          JSON.stringify(updatedMessages)
+        );
+        return updatedMessages;
+      });
+    };
+
+    socket.on("connect", () => {
+      if (messages.length === 0) {
+        socket.emit("getInitialQuestion"); // Emit an event to get the initial question
+      }
     });
 
-    socket.on("response", (response) => {
-      setLoading(false); // Hide loading indicator when response received
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: response, from: "bot" },
-      ]);
-    });
+    socket.on("initialQuestion", handleInitialQuestion);
+    socket.on("question", handleQuestion);
+    socket.on("response", handleResponse);
 
     return () => {
-      socket.off("question");
-      socket.off("response");
+      socket.off("initialQuestion", handleInitialQuestion);
+      socket.off("question", handleQuestion);
+      socket.off("response", handleResponse);
     };
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("chatMessages", JSON.stringify(messages));
   }, [messages]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { text: input, from: "user" },
-    ]);
-    setLoading(true); // Show loading indicator when submitting answer
+    if (input.trim() === "") return;
+    const userMessage = { text: input, from: "user" };
+    setMessages((prevMessages) => {
+      const updatedMessages = [...prevMessages, userMessage];
+      localStorage.setItem(
+        "chatMessages",
+        JSON.stringify(updatedMessages)
+      );
+      return updatedMessages;
+    });
     socket.emit("answer", input);
+    // setLoading(true);
     setInput("");
   };
 
+  const handleReset = () => {
+    setMessages([]);
+    localStorage.removeItem("chatMessages");
+    socket.emit("getInitialQuestion"); // Emit an event to get the initial question again
+  };
   return (
-    <div className=" pt-20">
-      <div className="container w-3/4 mx-auto">
-        <div>
+    <div className="h-screen pt-10">
+      <div className="w-full flex flex-col items-center">
+        <h1 className="text-4xl  font-raleway">
+          How can we help you?
+        </h1>
+        <img src={Bot} alt="Bot" className="h-full object-contain" />
+      </div>
+
+      <div className="container w-3/4 m-auto flex flex-col h-3/4">
+        <div className="flex-grow overflow-y-auto p-4 space-y-4 bg-whatsapp object-cover">
           {messages.map((msg, index) => (
             <div
               key={index}
-              className={`message ${msg.from === "bot" ? "text-left" : "text-right"}`}
+              className={`p-2 rounded-lg ${
+                msg.from === "bot"
+                  ? "bg-green-100 self-start"
+                  : "bg-blue-100 self-end"
+              }`}
             >
               {msg.text}
             </div>
           ))}
+          {/* {loading && (
+            <div className="p-2 rounded-lg bg-green-100 self-start">
+              Loading...
+            </div>
+          )} */}
         </div>
-        {isLoading && (
-          <div className="text-center py-2">Loading...</div>
-        )}
-        <form onSubmit={handleSubmit} className="mt-4">
+        <form onSubmit={handleSubmit} className="flex flex-col mt-4">
           <input
-            className="p-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-500 w-full"
+            className="p-2 border border-gray-400 rounded w-full"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type your answer..."
           />
-          <button
-            className="mt-2 p-2 w-full bg-slate-300 rounded-md text-white"
-            type="submit"
-          >
-            Send
-          </button>
+          <div className="mt-2 flex space-x-2 pb-4">
+            <button
+              className="p-2 bg-slate-300 rounded-md"
+              type="submit"
+            >
+              Send
+            </button>
+            <button
+              type="button"
+              className="p-2 bg-red-300 rounded-md"
+              onClick={handleReset}
+            >
+              Reset
+            </button>
+          </div>
         </form>
       </div>
     </div>

@@ -77,8 +77,14 @@ io.on("connection", (socket) => {
   // Send a "connected!" message to the client
   socket.emit("message", "connected!");
 
-  // Start asking the first question
-  socket.emit("question", questions[currentQuestionIndex]);
+  // // Start asking the first question
+  // socket.emit("question", questions[currentQuestionIndex]);
+  // Send the initial question if requested
+  socket.on("getInitialQuestion", () => {
+    currentQuestionIndex = 0;
+    chat = [];
+    socket.emit("initialQuestion", questions[currentQuestionIndex]);
+  });
 
   socket.on("answer", (answer) => {
     chat.push(questions[currentQuestionIndex]);
