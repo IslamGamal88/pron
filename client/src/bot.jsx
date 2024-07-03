@@ -4,7 +4,7 @@ import Bot from "./assets/bot.jpeg";
 
 const url =
   process.env.NODE_ENV === "production"
-    ? "http://164.92.181.199:8080"
+    ? "http://165.227.86.178:8080"
     : "http://localhost:8080";
 
 const socket = io(url);
