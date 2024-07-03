@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        whatsapp: "url('src/assets/whatsapp.jpeg')",
+        whatsapp: "url('/whatsapp.jpeg')",
       },
       fontFamily: {
         raleway: ["Raleway", "sans-serif"],
