@@ -20,7 +20,7 @@ function App() {
           <h1 className="text-7xl text-center sm:mb-4 font-raleway">
             Pronation
           </h1>
-          <div className="flex flex-col gap-8 sm:grid sm:grid-cols-2 sm:gap-1 sm:h-[40vh]">
+          <div className="flex flex-col gap-8 sm:grid sm:grid-cols-2 sm:gap-1 sm:h-[40vh] md:h-auto">
             <div className="relative h-full w-ful">
               <img
                 className="w-full h-full object-cover"
