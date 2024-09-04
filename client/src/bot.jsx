@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 import Bot from "./assets/bot.jpeg";
-
 const url =
   process.env.NODE_ENV === "production"
-    ? "http://165.227.86.178:8080"
+    ? "http://208.68.36.226:8080"
     : "http://localhost:8080";
 
 const socket = io(url);
